@@ -17,7 +17,7 @@ Cette perte de balance vient de la densité non uniforme de la galaxie. Le centr
 
 Le cours suggère alors une idée naturelle : utiliser un \textit{splitting adaptatif}. Le principe serait de donner des sous-domaines plus petits aux zones denses et plus grands aux zones peu peuplées, afin de mieux répartir le nombre réel de particules et non seulement le nombre de cellules.
 
-Cette solution améliorerait le balance de charge, mais elle introduirait un nouveau coût :
+Cette solution améliorerait l'équilibre de charge, mais elle introduirait un nouveau coût :
 \begin{itemize}
     \item interfaces plus irrégulières ;
     \item gestion plus complexe des voisins ;
@@ -25,4 +25,4 @@ Cette solution améliorerait le balance de charge, mais elle introduirait un nou
     \item halos moins réguliers et donc communication plus délicate.
 \end{itemize}
 
-Autrement dit, l'étape 3 valide bien la décomposition de domaine et les cellules fantômes, mais elle montre aussi pourquoi une grille régulière n'est pas suffisante pour obtenir une bonne scalabilité sur une galaxie très concentrée.
+Autrement dit, l'étape 3 valide bien la décomposition de domaine et les cellules fantômes, mais elle montre aussi pourquoi une grille régulière ne suffit pas à obtenir une bonne scalabilité sur une galaxie très concentrée.

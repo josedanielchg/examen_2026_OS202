@@ -10,7 +10,7 @@ Le travail est organisé par étapes afin de conserver une version exécutable d
     \item \textbf{Étape 00 -- baseline :} version de référence, séquentielle, utilisée pour comprendre le code, vérifier le comportement de la simulation et mesurer les temps initiaux.
     \item \textbf{Étape 01 -- Numba avec threads :} version \textit{shared memory}, où l'on parallélise seulement les parties sûres du calcul avec \texttt{Numba} et \texttt{prange}.
     \item \textbf{Étape 02 -- séparation affichage / calcul :} version MPI avec deux processus, un pour l'affichage et un pour le calcul, afin d'isoler clairement le rendu graphique du noyau numérique.
-    \item \textbf{Étape 03 -- MPI complet sur la grille :} version prévue en mémoire distribuée, où plusieurs processus se partagent la grille de calcul avec échange de cellules fantômes.
+    \item \textbf{Étape 03 -- MPI complet sur la grille :} version en mémoire distribuée, où plusieurs processus se partagent la grille de calcul, échangent des cellules fantômes et reconstruisent l'état global pour l'affichage.
 \end{itemize}
 
-Dans ce rapport, les étapes 01 et 02 sont désormais décrites avec leurs résultats validés. L'étape 03 reste prévue dans l'organisation du dépôt, mais elle sera traitée dans la suite du travail.
+Ce rapport couvre désormais les étapes 01, 02 et 03. L'idée générale est simple : on commence par paralléliser localement le calcul avec Numba, puis on sépare affichage et calcul avec MPI, et enfin on distribue réellement le calcul sur plusieurs workers avec décomposition de domaine et cellules fantômes.

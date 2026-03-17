@@ -6,11 +6,13 @@ Ce dossier contient les scripts et les données utilisés pour générer les gra
 
 - `generate_stage1_plots.py` : génère les fichiers de données CSV et les snippets LaTeX/TikZ utilisés dans le rapport.
 - `generate_stage2_plots.py` : génère les données et graphiques utilisés pour l'étape 2 et pour la comparaison entre les étapes 1 et 2.
+- `generate_stage3_plots.py` : génère les données et graphiques utilisés pour l'étape 3 et pour la comparaison entre les étapes 2 et 3.
 - `initial_render_update.csv` : données de la mesure interactive initiale.
 - `stage1_scaling.csv` : données de benchmark de l'étape 1.
 - `stage1_interactive_scaling.csv` : données de benchmark interactif de l'étape 1.
 - `stage2_scaling.csv` : données de benchmark MPI de l'étape 2.
 - `stage2_interactive_scaling.csv` : données interactives de l'étape 2.
+- `stage3_scaling.csv` : données de benchmark distribuées de l'étape 3.
 - `stage1_interactive.csv` : données interactives stabilisées de l'étape 1.
 - `interactive_stage1_stage2.csv` : comparaison interactive entre les étapes 1 et 2.
 - `compute_speedup_stage1_stage2.csv` : comparaison des speed-up compute-only entre les étapes 1 et 2.
@@ -27,6 +29,9 @@ Ce dossier contient les scripts et les données utilisés pour générer les gra
 - `compute_speedup_stage1_stage2_plot.tex` : comparaison des speed-up compute-only entre les étapes 1 et 2.
 - `interactive_stage1_stage2_plot.tex` : comparaison interactive entre les étapes 1 et 2.
 - `interactive_speedup_stage1_stage2_plot.tex` : comparaison des speed-up interactifs entre les étapes 1 et 2.
+- `stage3_speedup_plot.tex` : speed-up de l'étape 3 en fonction du nombre de workers MPI.
+- `stage3_breakdown_plot.tex` : décomposition du temps critique de l'étape 3.
+- `stage2_vs_stage3_plot.tex` : comparaison des temps bout-en-bout entre les étapes 2 et 3.
 
 ## Régénération
 
@@ -35,4 +40,5 @@ Depuis la racine du dépôt :
 ```bash
 python3 plots/generate_stage1_plots.py
 python3 plots/generate_stage2_plots.py
+python3 plots/generate_stage3_plots.py
 ```
