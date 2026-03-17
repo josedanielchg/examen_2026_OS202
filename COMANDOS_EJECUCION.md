@@ -6,7 +6,30 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-# Ejecutar scripts
+# Flujo por etapas
+
+La entrega final debe conservar cada implementación en `stages/`.
+
+## Etapa 00: baseline congelada
+
+```bash
+python stages/00_baseline/nbodies_grid.py data/galaxy_1000 0.001 20,20,1
+python stages/00_baseline/nbodies_grid.py data/galaxy_5000 0.0015 15,15,1
+```
+
+## Etapa 01: numba con threads
+
+Pendiente de implementación en `stages/01_numba_threads/`.
+
+## Etapa 02: MPI display/cálculo
+
+Pendiente de implementación en `stages/02_mpi_display_compute/`.
+
+## Etapa 03: MPI completo con ghost cells
+
+Pendiente de implementación en `stages/03_mpi_full_ghost/`.
+
+# Scripts auxiliares del repositorio
 
 ## Generar datos
 
@@ -52,3 +75,5 @@ NUMBA_NUM_THREADS=4 python barnes_hut_numba.py data/galaxy_1000 0.001 0.5
 En esta maquina los imports de `numpy`, `numba`, `PySDL2` y `PyOpenGL` ya quedaron verificados dentro de `.venv`.
 
 Si ejecutas esto en otra maquina Linux y falta SDL2 a nivel sistema, instala el paquete de tu distribucion correspondiente a SDL2 antes de abrir los visualizadores.
+
+Las ramas `stage/*` se usan para desarrollo temporal. La preservación real de cada implementación debe quedar dentro de `stages/`.
