@@ -1,0 +1,10 @@
+\section{Conclusion intermédiaire}
+
+Cette première étape installe la base méthodologique du projet :
+\begin{itemize}
+    \item une implémentation autonome de l'étape 1 conservée dans \texttt{stages/01\_numba\_threads/} ;
+    \item une stratégie de benchmark reproductible, séparant calcul et affichage ;
+    \item un rapport LaTeX structuré dès le début pour intégrer progressivement les résultats validés.
+\end{itemize}
+
+Sur la configuration retenue, le benchmark passe d'un temps moyen de \SI{227.970}{ms} par pas à \SI{33.233}{ms} avec 16 threads, soit un speed-up de \(6.861\). Cette étape valide donc la pertinence de l'approche Numba sur la partie calcul, tout en montrant déjà les limites d'efficacité attendues lorsque le nombre de threads augmente.

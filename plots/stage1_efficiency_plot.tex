@@ -1,0 +1,29 @@
+\begin{tikzpicture}
+\begin{axis}[
+    width=\linewidth,
+    height=6.0cm,
+    xlabel={Nombre de threads},
+    ylabel={Efficacité},
+    xmin=1,
+    xmax=16,
+    ymin=0,
+    ymax=1.05,
+    xtick={1,2,4,8,16},
+    grid=both,
+    minor y tick num=1,
+    axis line style={draw=black!60},
+]
+\addplot[
+    color=enstaBleuClair,
+    mark=square*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 1.000)
+        (2, 0.912)
+        (4, 0.820)
+        (8, 0.584)
+        (16, 0.429)
+};
+\end{axis}
+\end{tikzpicture}

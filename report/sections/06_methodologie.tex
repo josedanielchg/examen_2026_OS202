@@ -1,0 +1,38 @@
+\section{Méthodologie expérimentale}
+
+\subsection{Environnement expérimental}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l l}
+        \toprule
+        \textbf{Paramètre} & \textbf{Valeur} \\
+        \midrule
+        CPU & AMD Ryzen 7 5800H \\
+        Cœurs physiques & 8 \\
+        Threads logiques & 16 \\
+        Python & 3.12.3 \\
+        Numba & 0.64.0 \\
+        Jeu de données principal & \texttt{data/galaxy\_5000} \\
+        Pas de temps & 0.0015 \\
+        Grille & \(15 \times 15 \times 1\) \\
+        Warmup benchmark & 1 pas \\
+        Pas mesurés & 30 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Environnement et paramètres de mesure pour l'étape 1}
+    \label{tab:environment_stage1}
+\end{table}
+
+\subsection{Procédure}
+
+La procédure de mesure retenue est la suivante :
+\begin{enumerate}[label=\arabic*.]
+    \item valider le bon fonctionnement de la simulation interactive sur \texttt{data/galaxy\_1000} ;
+    \item relever un échantillon des temps \texttt{Render time} et \texttt{Update time} ;
+    \item exécuter le benchmark sur \texttt{data/galaxy\_5000} avec \(1, 2, 4, 8, 16\) threads ;
+    \item calculer pour chaque cas le speed-up \(S(n) = T(1) / T(n)\) ;
+    \item calculer l'efficacité \(E(n) = S(n) / n\).
+\end{enumerate}
+
+La campagne de benchmark de cette étape a été exécutée avec \texttt{data/galaxy\_5000}, \(dt = 0.0015\), une grille \(15 \times 15 \times 1\), un pas de warmup non mesuré et 30 pas mesurés par configuration.

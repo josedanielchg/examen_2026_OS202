@@ -1,0 +1,40 @@
+\section{Étape 1 : parallélisation avec Numba}
+
+\subsection{Objectif}
+
+Cette étape vise à exploiter le parallélisme mémoire partagée disponible sur la machine locale. La machine de test dispose d'un processeur AMD Ryzen 7 5800H avec 8 cœurs physiques et 16 threads logiques. La campagne de mesure prévue utilisera \(1, 2, 4, 8, 16\) threads.
+
+\subsection{Principes de parallélisation retenus}
+
+La parallélisation ne doit être appliquée que sur les boucles dont les itérations sont indépendantes. Dans cette étape, les choix retenus sont les suivants :
+\begin{itemize}
+    \item paralléliser le calcul des accélérations, car chaque itération met à jour uniquement l'accélération d'un corps ;
+    \item paralléliser le calcul des masses et centres de masse des cellules, car chaque cellule écrit dans un emplacement propre ;
+    \item paralléliser les boucles d'intégration de Verlet sur les corps ;
+    \item conserver en série le comptage des corps par cellule et leur insertion dans les tableaux d'indices, car ces boucles modifient des compteurs partagés et introduiraient des \textit{race conditions}.
+\end{itemize}
+
+\subsection{Organisation des fichiers}
+
+Pour préserver les étapes précédentes, cette implémentation est stockée dans \path{stages/01_numba_threads/}. Les fichiers principaux sont :
+\begin{itemize}
+    \item \texttt{nbodies\_grid\_numba\_parallel.py}
+    \item \texttt{visualizer3d.py}
+    \item \texttt{README.md}
+\end{itemize}
+
+\subsection{Benchmark sans affichage}
+
+Le speed-up de l'étape 1 est mesuré en mode \textit{compute-only}, sans SDL/OpenGL, afin d'isoler le coût de calcul. Cette décision est essentielle pour deux raisons :
+\begin{itemize}
+    \item éviter que le rendu graphique ne masque les gains réels du calcul parallèle ;
+    \item exclure la première itération chronométrée à cause du coût de compilation JIT de Numba.
+\end{itemize}
+
+Le script de cette étape propose donc deux modes :
+\begin{itemize}
+    \item simulation interactive ;
+    \item benchmark sans affichage avec \texttt{--benchmark --steps N --warmup M}.
+\end{itemize}
+
+En mode benchmark, la quantité mesurée est plus précise que dans le visualiseur : chaque temps élémentaire correspond uniquement à un appel à \texttt{local\_system.update\_positions(dt)}. Il s'agit donc du coût du calcul physique pur d'un pas de temps, sans gestion de fenêtre, sans rendu et sans copie des positions vers l'interface graphique.

@@ -1,0 +1,24 @@
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=22pt,
+    width=0.82\linewidth,
+    height=6.2cm,
+    ymin=0,
+    ylabel={Temps (ms)},
+    symbolic x coords={Render + events, Update},
+    xtick=data,
+    xticklabel style={font=\small, align=center},
+    nodes near coords,
+    every node near coord/.append style={font=\footnotesize},
+    enlarge x limits=0.35,
+    grid=both,
+    minor y tick num=1,
+    axis line style={draw=black!60},
+]
+\addplot[fill=enstaBleuClair, draw=enstaBleuFonce] coordinates {
+    (Render + events, 5.0)
+    (Update, 52.0)
+};
+\end{axis}
+\end{tikzpicture}

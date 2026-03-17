@@ -1,0 +1,21 @@
+\section{Discussion avec la loi d'Amdahl}
+
+La loi d'Amdahl rappelle que le speed-up global reste borné par la fraction séquentielle du programme. Même si le noyau de calcul gravitationnel est bien parallélisé, le gain observé dans la simulation interactive peut rester limité si l'affichage, la gestion de la fenêtre ou certaines étapes sérielles de la construction de la grille conservent un poids important.
+
+Cette observation guidera l'interprétation des résultats :
+\begin{itemize}
+    \item si le benchmark \textit{compute-only} accélère fortement, alors la parallélisation Numba est pertinente ;
+    \item si la simulation interactive accélère peu, l'affichage ou les parties sérielles expliquent vraisemblablement l'écart ;
+    \item la comparaison entre 8 et 16 threads permettra d'évaluer l'intérêt réel de l'hyperthreading sur ce noyau de calcul.
+\end{itemize}
+
+Les mesures obtenues montrent un speed-up monotone jusqu'à 16 threads, mais avec une efficacité décroissante. Le passage de 8 à 16 threads améliore encore le temps moyen par pas, mais le gain marginal est plus faible que dans les paliers précédents. Ce comportement est cohérent avec un noyau où subsistent des parties sérielles et des coûts mémoire non négligeables.
+
+Un essai interactif sur \texttt{data/galaxy\_1000} après parallélisation montre en outre que, passé l'échauffement initial, le temps de mise à jour tombe autour de \SI{4}{ms}, soit du même ordre de grandeur que le rendu graphique. Ce point est important : une fois le calcul accéléré, l'affichage devient une limite beaucoup plus visible du speed-up global.
+
+Le constat principal de l'étape 1 est donc le suivant :
+\begin{itemize}
+    \item sur le benchmark \textit{compute-only}, la parallélisation Numba est efficace ;
+    \item sur la version interactive, l'affichage n'était pas dominant avant parallélisation, mais il pèsera proportionnellement davantage une fois le calcul accéléré ;
+    \item la suite logique sera de séparer affichage et calcul avec MPI pour éviter que le rendu ne devienne le nouveau facteur limitant.
+\end{itemize}

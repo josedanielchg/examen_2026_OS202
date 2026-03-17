@@ -1,0 +1,41 @@
+\section{Résultats}
+
+\subsection{Table des performances de l'étape 1}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c c}
+        \toprule
+        \textbf{Threads} & \textbf{Temps moyen par pas (ms)} & \textbf{Speed-up} & \textbf{Efficacité} \\
+        \midrule
+        1 & 227.970 & 1.000 & 1.000 \\
+        2 & 124.934 & 1.825 & 0.912 \\
+        4 & 69.480 & 3.281 & 0.820 \\
+        8 & 48.834 & 4.668 & 0.584 \\
+        16 & 33.233 & 6.861 & 0.429 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Résultats du benchmark compute-only pour l'étape 1}
+    \label{tab:stage1_results}
+\end{table}
+
+\subsection{Graphiques}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage1_speedup_plot.tex}
+        \caption{Speed-up}
+        \label{fig:stage1_speedup}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage1_efficiency_plot.tex}
+        \caption{Efficacité}
+        \label{fig:stage1_efficiency}
+    \end{subfigure}
+    \caption{Scalabilité observée sur l'étape 1}
+    \label{fig:stage1_scaling}
+\end{figure}

@@ -1,0 +1,14 @@
+\section{Description du problème}
+
+Le calcul direct des interactions gravitationnelles entre toutes les étoiles serait en \(O(N^2)\). Pour réduire ce coût, le programme utilise une grille cartésienne dans le plan principal de la galaxie. Les interactions proches sont calculées de manière détaillée avec les cellules voisines, tandis que les interactions lointaines sont approchées via la masse totale et le centre de masse des cellules éloignées.
+
+En pratique, chaque itération suit le schéma suivant :
+\begin{enumerate}[label=\arabic*.]
+    \item placer les étoiles dans les cellules de la grille ;
+    \item calculer les masses totales et centres de masse des cellules ;
+    \item calculer les accélérations gravitationnelles ;
+    \item mettre à jour les positions et vitesses ;
+    \item afficher la scène.
+\end{enumerate}
+
+L'enjeu de l'étape 1 est d'identifier les boucles sûres à paralléliser avec Numba, c'est-à-dire celles où chaque itération écrit dans une zone mémoire indépendante.
