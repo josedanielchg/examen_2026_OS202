@@ -19,7 +19,10 @@ python stages/00_baseline/nbodies_grid.py data/galaxy_5000 0.0015 15,15,1
 
 ## Etapa 01: numba con threads
 
-Pendiente de implementación en `stages/01_numba_threads/`.
+```bash
+python stages/01_numba_threads/nbodies_grid_numba_parallel.py data/galaxy_5000 0.0015 15 15 1
+NUMBA_NUM_THREADS=4 python stages/01_numba_threads/nbodies_grid_numba_parallel.py data/galaxy_5000 0.0015 15 15 1 --benchmark --steps 30 --warmup 1
+```
 
 ## Etapa 02: MPI display/cálculo
 
