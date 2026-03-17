@@ -1,0 +1,29 @@
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=14pt,
+    width=\linewidth,
+    height=6.8cm,
+    ymin=0,
+    ylabel={Temps moyen (ms)},
+    symbolic x coords={Render, Update / attente},
+    xtick=data,
+    enlarge x limits=0.3,
+    grid=both,
+    minor y tick num=1,
+    legend style={at={(0.5,-0.18)}, anchor=north, legend columns=2},
+    axis line style={draw=black!60},
+]
+\addplot[fill=enstaBleuClair, draw=enstaBleuFonce] coordinates {
+    (Render, 4.750)
+    (Update / attente, 5.800)
+};
+\addlegendentry{Étape 1 interactive}
+
+\addplot[fill=black!25, draw=black!70] coordinates {
+    (Render, 4.425)
+    (Update / attente, 6.025)
+};
+\addlegendentry{Étape 2 interactive}
+\end{axis}
+\end{tikzpicture}

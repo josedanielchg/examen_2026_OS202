@@ -1,0 +1,44 @@
+\begin{tikzpicture}
+\begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    xlabel={Nombre de threads},
+    ylabel={Speed-up total},
+    xmin=1,
+    xmax=16,
+    ymin=0,
+    xtick={1,2,4,8,16},
+    legend style={at={(0.5,-0.2)}, anchor=north, legend columns=2},
+    grid=both,
+    minor y tick num=1,
+    axis line style={draw=black!60},
+]
+\addplot[
+    color=enstaBleuFonce,
+    mark=*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 1.000)
+        (2, 1.503)
+        (4, 2.019)
+        (8, 2.427)
+        (16, 2.506)
+};
+\addlegendentry{Étape 1 interactive}
+
+\addplot[
+    color=black!70,
+    mark=triangle*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 1.000)
+        (2, 1.789)
+        (4, 2.256)
+        (8, 2.449)
+        (16, 2.840)
+};
+\addlegendentry{Étape 2 interactive}
+\end{axis}
+\end{tikzpicture}

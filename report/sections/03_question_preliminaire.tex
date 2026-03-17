@@ -1,0 +1,8 @@
+\section{Question préliminaire sur \texorpdfstring{$N_k = 1$}{Nk = 1}}
+
+Le sujet demande d'expliquer pourquoi il n'est pas intéressant de choisir une valeur \(N_k > 1\). La raison principale est géométrique : la galaxie simulée est essentiellement aplatie dans le plan \(Oxy\), avec une faible épaisseur selon \(Oz\). Découper davantage l'axe \(z\) ne change donc presque pas la qualité de l'approximation gravitationnelle, mais augmente le nombre de cellules, le coût de gestion de la grille et, plus tard, le volume de communication MPI.
+
+\begin{formal}
+\textbf{Conclusion préliminaire.}
+Pour cette simulation, prendre \(N_k = 1\) est un choix cohérent : il respecte la géométrie du problème et évite un coût algorithmique supplémentaire peu rentable.
+\end{formal}

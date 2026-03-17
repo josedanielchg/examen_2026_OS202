@@ -1,0 +1,58 @@
+\begin{tikzpicture}
+\begin{axis}[
+    width=\linewidth,
+    height=7.0cm,
+    xlabel={Nombre de threads},
+    ylabel={Temps moyen par pas (ms)},
+    xmin=1,
+    xmax=16,
+    ymin=0,
+    xtick={1,2,4,8,16},
+    legend style={at={(0.5,-0.2)}, anchor=north, legend columns=1},
+    grid=both,
+    minor y tick num=1,
+    axis line style={draw=black!60},
+]
+\addplot[
+    color=enstaBleuFonce,
+    mark=*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 227.970)
+        (2, 124.934)
+        (4, 69.480)
+        (8, 48.834)
+        (16, 33.233)
+};
+\addlegendentry{Étape 1 compute-only}
+
+\addplot[
+    color=enstaBleuClair,
+    mark=square*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 246.802)
+        (2, 138.732)
+        (4, 79.649)
+        (8, 52.546)
+        (16, 42.668)
+};
+\addlegendentry{Étape 2 rank 1 compute}
+
+\addplot[
+    color=black!70,
+    mark=triangle*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 246.919)
+        (2, 138.853)
+        (4, 79.767)
+        (8, 52.673)
+        (16, 42.801)
+};
+\addlegendentry{Étape 2 end-to-end}
+\end{axis}
+\end{tikzpicture}

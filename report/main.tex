@@ -1,0 +1,116 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{physics}
+\usepackage{titlesec}
+\usepackage[strict]{changepage}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{pgfplots}
+
+\geometry{margin=2.5cm}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{14pt}
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+\pgfplotsset{compat=1.18}
+
+\definecolor{enstaBleuFonce}{HTML}{003366}
+\definecolor{enstaBleuClair}{HTML}{0073CF}
+\definecolor{formalshade}{rgb}{0.95,0.95,1}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=enstaBleuFonce,
+    urlcolor=blue,
+    citecolor=gray
+}
+
+\titleformat{\section}[block]
+  {\normalfont\Large\bfseries\color{enstaBleuFonce}}
+  {\thesection}{1em}{}
+  [\vspace{0.3em}\titlerule\color{enstaBleuFonce}\vspace{0.3em}]
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{enstaBleuClair}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black!70}}
+  {\thesubsubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{ENSTA Paris}
+\fancyhead[R]{OS202 -- Examen machine 2026}
+\fancyfoot[C]{\thepage}
+
+\newenvironment{formal}{%
+\def\FrameCommand{%
+  \hspace{1pt}%
+  {\color{enstaBleuFonce}\vrule width 2pt}%
+  {\color{formalshade}\vrule width 4pt}%
+  \colorbox{formalshade}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}%
+\begin{adjustwidth}{}{7pt}%
+\vspace{4pt}%
+}{%
+\vspace{4pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\begin{document}
+
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+    \centering
+    \vspace*{2.5cm}
+
+    \includegraphics[width=0.48\textwidth]{logo_ensta_2025.png}\par
+    \vspace{1.5cm}
+
+    {\Large Programmation parallèle\par}
+    \vspace{0.3cm}
+    {\huge\bfseries Examen machine OS202 2026\par}
+    \vspace{0.5cm}
+    {\Large Parallélisation d'une simulation de galaxie\par}
+
+    \vspace{2.5cm}
+    {\Large Auteur : \textit{CHACÓN GÓMEZ José Daniel}\par}
+
+    \vfill
+    École Nationale des techniques avancées\\
+    Mars 2026
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\tableofcontents
+\newpage
+
+\input{sections/01_introduction.tex}
+\input{sections/02_description_probleme.tex}
+\input{sections/03_question_preliminaire.tex}
+\input{sections/04_mesure_initiale.tex}
+\input{sections/05_etape1_numba.tex}
+\input{sections/06_methodologie.tex}
+\input{sections/07_resultats.tex}
+\input{sections/08_amdahl.tex}
+\input{sections/09_etape2_mpi.tex}
+\input{sections/11_resultats_stage2.tex}
+\input{sections/12_comparaison_stage1_stage2.tex}
+\input{sections/09_conclusion.tex}
+
+\end{document}

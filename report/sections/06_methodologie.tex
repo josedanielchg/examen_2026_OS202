@@ -1,0 +1,27 @@
+\section{Méthodologie expérimentale de l'étape 1}
+
+\subsection{Environnement expérimental}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l l}
+        \toprule
+        \textbf{Paramètre} & \textbf{Valeur} \\
+        \midrule
+        CPU & AMD Ryzen 7 5800H \\
+        Cœurs physiques & 8 \\
+        Threads logiques & 16 \\
+        Python & 3.12.3 \\
+        Numba & 0.64.0 \\
+        Jeu de données principal & \texttt{data/galaxy\_5000} \\
+        Pas de temps & 0.0015 \\
+        Grille & \(15 \times 15 \times 1\) \\
+        Warmup benchmark & 1 pas \\
+        Pas mesurés & 30 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Environnement et paramètres de mesure pour l'étape 1}
+    \label{tab:environment_stage1}
+\end{table}
+
+Les résultats de cette étape correspondent à la campagne de benchmark exécutée sur \texttt{data/galaxy\_5000}, avec \(dt = 0.0015\), une grille \(15 \times 15 \times 1\), un pas de warmup non mesuré et 30 pas mesurés par configuration.
