@@ -23,7 +23,10 @@ Pendiente de implementación en `stages/01_numba_threads/`.
 
 ## Etapa 02: MPI display/cálculo
 
-Pendiente de implementación en `stages/02_mpi_display_compute/`.
+```bash
+mpirun --bind-to none -np 2 python stages/02_mpi_display_compute/nbodies_grid_numba_mpi_display.py data/galaxy_5000 0.0015 15 15 1
+NUMBA_NUM_THREADS=4 mpirun --bind-to none -np 2 python stages/02_mpi_display_compute/nbodies_grid_numba_mpi_display.py data/galaxy_5000 0.0015 15 15 1 --benchmark --steps 30 --warmup 1
+```
 
 ## Etapa 03: MPI completo con ghost cells
 
@@ -72,7 +75,7 @@ NUMBA_NUM_THREADS=4 python barnes_hut_numba.py data/galaxy_1000 0.001 0.5
 
 # Nota
 
-En esta maquina los imports de `numpy`, `numba`, `PySDL2` y `PyOpenGL` ya quedaron verificados dentro de `.venv`.
+En esta maquina los imports de `numpy`, `numba`, `PySDL2`, `PyOpenGL` y `mpi4py` ya quedaron verificados dentro de `.venv`.
 
 Si ejecutas esto en otra maquina Linux y falta SDL2 a nivel sistema, instala el paquete de tu distribucion correspondiente a SDL2 antes de abrir los visualizadores.
 

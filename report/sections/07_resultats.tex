@@ -1,0 +1,92 @@
+\section{Résultats de l'étape 1}
+
+\subsection{Benchmark compute-only}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c c}
+        \toprule
+        \textbf{Threads} & \textbf{Temps moyen par pas (ms)} & \textbf{Speed-up} & \textbf{Efficacité} \\
+        \midrule
+        1 & 227.970 & 1.000 & 1.000 \\
+        2 & 124.934 & 1.825 & 0.912 \\
+        4 & 69.480 & 3.281 & 0.820 \\
+        8 & 48.834 & 4.668 & 0.584 \\
+        16 & 33.233 & 6.861 & 0.429 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Résultats du benchmark compute-only pour l'étape 1}
+    \label{tab:stage1_results}
+\end{table}
+
+\subsection{Graphiques du benchmark compute-only}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage1_speedup_plot.tex}
+        \caption{Speed-up}
+        \label{fig:stage1_speedup}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage1_efficiency_plot.tex}
+        \caption{Efficacité}
+        \label{fig:stage1_efficiency}
+    \end{subfigure}
+    \caption{Scalabilité observée sur le benchmark compute-only de l'étape 1}
+    \label{fig:stage1_scaling}
+\end{figure}
+
+\subsection{Benchmark interactif}
+
+Pour préparer la comparaison avec l'étape 2, on a aussi mesuré l'étape 1 en mode interactif, avec fenêtre ouverte, sur \texttt{data/galaxy\_1000}. Le temps total correspond ici à \texttt{Render time + Update time}.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{c c c c c c}
+        \toprule
+        \textbf{Threads} & \textbf{Render (ms)} & \textbf{Update (ms)} & \textbf{Total (ms)} & \textbf{Speed-up total} & \textbf{Efficacité totale} \\
+        \midrule
+        1 & 4.500 & 16.800 & 21.300 & 1.000 & 1.000 \\
+        2 & 5.025 & 9.150 & 14.175 & 1.503 & 0.751 \\
+        4 & 4.750 & 5.800 & 10.550 & 2.019 & 0.505 \\
+        8 & 4.475 & 4.300 & 8.775 & 2.427 & 0.303 \\
+        16 & 4.688 & 3.812 & 8.500 & 2.506 & 0.157 \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \caption{Résultats du benchmark interactif pour l'étape 1}
+    \label{tab:stage1_interactive}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage1_interactive_speedup_plot.tex}
+        \caption{Speed-up total}
+        \label{fig:stage1_interactive_speedup}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage1_interactive_efficiency_plot.tex}
+        \caption{Efficacité totale}
+        \label{fig:stage1_interactive_efficiency}
+    \end{subfigure}
+    \caption{Graphiques du benchmark interactif pour l'étape 1}
+    \label{fig:stage1_interactive_scaling}
+\end{figure}
+
+On observe une amélioration nette du temps total, mais plus limitée qu'en compute-only. La partie \texttt{Render time} reste presque constante, ce qui borne mécaniquement le gain global.
+
+\begin{figure}[H]
+    \centering
+    \input{../plots/stage1_interactive_plot.tex}
+    \caption{Décomposition des temps interactifs de l'étape 1 à 4 threads}
+    \label{fig:stage1_interactive}
+\end{figure}

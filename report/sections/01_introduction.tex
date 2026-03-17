@@ -1,0 +1,16 @@
+\section{Introduction}
+
+Ce document présente l'avancement de l'examen machine de programmation parallèle consacré à la simulation d'une galaxie. Le programme considère un trou noir central massif et un grand nombre d'étoiles. À chaque pas de temps, il calcule les accélérations gravitationnelles, puis met à jour les positions et les vitesses au moyen d'un schéma de Verlet avant d'afficher la scène en trois dimensions.
+
+Le travail est organisé par étapes afin de conserver une version exécutable de chaque implémentation intermédiaire. Le mot \og étape \fg{} désigne ici une version précise du projet, avec un objectif technique bien délimité.
+
+\subsection{Signification des étapes}
+
+\begin{itemize}
+    \item \textbf{Étape 00 -- baseline :} version de référence, séquentielle, utilisée pour comprendre le code, vérifier le comportement de la simulation et mesurer les temps initiaux.
+    \item \textbf{Étape 01 -- Numba avec threads :} version \textit{shared memory}, où l'on parallélise seulement les parties sûres du calcul avec \texttt{Numba} et \texttt{prange}.
+    \item \textbf{Étape 02 -- séparation affichage / calcul :} version MPI avec deux processus, un pour l'affichage et un pour le calcul, afin d'isoler clairement le rendu graphique du noyau numérique.
+    \item \textbf{Étape 03 -- MPI complet sur la grille :} version prévue en mémoire distribuée, où plusieurs processus se partagent la grille de calcul avec échange de cellules fantômes.
+\end{itemize}
+
+Dans ce rapport, les étapes 01 et 02 sont désormais décrites avec leurs résultats validés. L'étape 03 reste prévue dans l'organisation du dépôt, mais elle sera traitée dans la suite du travail.

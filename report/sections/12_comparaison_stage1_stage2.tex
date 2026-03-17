@@ -1,0 +1,43 @@
+\section{Comparaison entre l'étape 1 et l'étape 2}
+
+\subsection{Comparaison des temps moyens}
+
+\begin{figure}[H]
+    \centering
+    \input{../plots/stage1_vs_stage2_plot.tex}
+    \caption{Comparaison des temps moyens par pas hors affichage}
+    \label{fig:stage1_stage2_mean_times}
+\end{figure}
+
+Sur le benchmark sans fenêtre, l'étape 2 reste logiquement un peu plus coûteuse que l'étape 1, car elle ajoute la synchronisation MPI et l'envoi des positions. La courbe montre toutefois que l'écart entre \texttt{rank1\_compute} et \texttt{end-to-end} reste très faible : le surcoût MPI ne change pas l'ordre de grandeur du temps moyen par pas.
+
+\subsection{Comparaison du speed-up compute-only}
+
+\begin{figure}[H]
+    \centering
+    \input{../plots/compute_speedup_stage1_stage2_plot.tex}
+    \caption{Comparaison des speed-up compute-only entre l'étape 1 et l'étape 2}
+    \label{fig:stage1_stage2_compute_speedup}
+\end{figure}
+
+L'étape 1 garde un léger avantage en speed-up compute-only. Par exemple, à 16 threads, elle atteint un speed-up de 6.861 contre 5.769 pour l'étape 2 en temps bout-en-bout. Cela reste cohérent : l'étape 2 ajoute une couche MPI, même si son coût de communication reste très faible.
+
+\subsection{Comparaison interactive}
+
+\begin{figure}[H]
+    \centering
+    \input{../plots/interactive_stage1_stage2_plot.tex}
+    \caption{Décomposition des temps interactifs à 4 threads}
+    \label{fig:stage1_stage2_interactive_breakdown}
+\end{figure}
+
+À 4 threads, les deux étapes ont pratiquement le même coût interactif total : \SI{10.550}{ms} pour l'étape 1 contre \SI{10.450}{ms} pour l'étape 2. L'étape 2 dépense un peu plus de temps en attente MPI, mais elle compense par un rendu légèrement plus court.
+
+\begin{figure}[H]
+    \centering
+    \input{../plots/interactive_speedup_stage1_stage2_plot.tex}
+    \caption{Comparaison des speed-up interactifs totaux entre l'étape 1 et l'étape 2}
+    \label{fig:stage1_stage2_interactive_speedup}
+\end{figure}
+
+Le résultat le plus utile pour la suite est que l'étape 2 scale légèrement mieux en mode interactif. Le gain reste modéré, mais il existe : à 16 threads, on obtient un speed-up total de 2.840 contre 2.506 pour l'étape 1. Autrement dit, la séparation affichage/calcul n'apporte pas un saut massif immédiat, mais elle isole correctement le rendu sans pénaliser le coût par image, ce qui prépare proprement l'étape suivante.

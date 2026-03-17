@@ -1,0 +1,80 @@
+\section{Résultats de l'étape 2}
+
+\subsection{Mode interactif}
+
+L'étape 2 doit surtout être lue en mode interactif. Sur \texttt{data/galaxy\_1000}, avec \texttt{mpirun --bind-to none -np 2}, le temps total par image correspond ici à \texttt{Render time + MPI wait + point update time}.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{c c c c c c}
+        \toprule
+        \textbf{Threads} & \textbf{Render (ms)} & \textbf{MPI wait + update (ms)} & \textbf{Total (ms)} & \textbf{Speed-up total} & \textbf{Efficacité totale} \\
+        \midrule
+        1 & 5.450 & 18.125 & 23.575 & 1.000 & 1.000 \\
+        2 & 4.350 & 8.825 & 13.175 & 1.789 & 0.895 \\
+        4 & 4.425 & 6.025 & 10.450 & 2.256 & 0.564 \\
+        8 & 4.825 & 4.800 & 9.625 & 2.449 & 0.306 \\
+        16 & 4.500 & 3.800 & 8.300 & 2.840 & 0.178 \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \caption{Résultats du mode interactif pour l'étape 2}
+    \label{tab:stage2_interactive}
+\end{table}
+
+On voit donc que le \texttt{rank 0} passe une partie du temps à attendre la nouvelle trame calculée par le \texttt{rank 1}, mais que le temps total reste du même ordre que celui de l'étape 1. La séparation MPI ne dégrade donc pas brutalement l'usage interactif.
+
+\subsection{Benchmark MPI hors affichage}
+
+Le tableau suivant ne représente pas le mode interactif. Il s'agit d'un benchmark MPI sans fenêtre, utilisé seulement pour estimer proprement le coût du calcul du \texttt{rank 1} et le surcoût de communication.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{c c c c c c}
+        \toprule
+        \textbf{Threads} & \textbf{rank1\_compute (ms)} & \textbf{end-to-end (ms)} & \textbf{Surcoût MPI (ms)} & \textbf{Speed-up} & \textbf{Efficacité} \\
+        \midrule
+        1 & 246.802 & 246.919 & 0.117 & 1.000 & 1.000 \\
+        2 & 138.732 & 138.853 & 0.121 & 1.778 & 0.889 \\
+        4 & 79.649 & 79.767 & 0.118 & 3.096 & 0.774 \\
+        8 & 52.546 & 52.673 & 0.127 & 4.688 & 0.586 \\
+        16 & 42.668 & 42.801 & 0.132 & 5.769 & 0.361 \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \caption{Résultats du benchmark MPI sans affichage}
+    \label{tab:stage2_results}
+\end{table}
+
+\subsection{Lecture directe du benchmark}
+
+Deux points ressortent immédiatement :
+\begin{itemize}
+    \item le temps \texttt{end-to-end} suit presque exactement le temps de calcul du \texttt{rank 1} ;
+    \item le surcoût moyen de communication reste très faible, proche de \SI{0.12}{ms} par pas sur toute la campagne.
+\end{itemize}
+
+Autrement dit, la séparation MPI est fonctionnelle et son coût de transport reste négligeable à cette échelle. Le temps total du benchmark reste donc dominé par le calcul gravitationnel lui-même.
+
+\subsection{Graphiques du benchmark}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage2_speedup_plot.tex}
+        \caption{Speed-up bout-en-bout}
+        \label{fig:stage2_speedup}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage2_efficiency_plot.tex}
+        \caption{Efficacité bout-en-bout}
+        \label{fig:stage2_efficiency}
+    \end{subfigure}
+    \caption{Scalabilité observée sur le benchmark MPI hors affichage de l'étape 2}
+    \label{fig:stage2_scaling}
+\end{figure}

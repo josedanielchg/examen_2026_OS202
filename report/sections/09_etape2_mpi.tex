@@ -1,0 +1,42 @@
+\section{Étape 2 : séparation affichage / calcul avec MPI}
+
+\subsection{Objectif}
+
+L'objectif de cette étape est d'isoler le travail graphique du travail numérique. Au lieu d'exécuter rendu et calcul dans le même processus, on utilise ici exactement deux processus MPI :
+\begin{itemize}
+    \item le \texttt{rank 0} gère uniquement la fenêtre, les événements SDL et le rendu OpenGL ;
+    \item le \texttt{rank 1} conserve tout l'état du système physique et exécute \texttt{update\_positions(dt)}.
+\end{itemize}
+
+Cette organisation prépare naturellement la suite du sujet : avant de distribuer réellement le calcul entre plusieurs processus, on vérifie déjà que l'affichage peut être extrait du chemin critique.
+
+\subsection{Changements clés d'implémentation}
+
+\begin{itemize}
+    \item un nouveau script MPI a été créé dans \path{stages/02_mpi_display_compute/}, avec exactement deux processus ;
+    \item le \texttt{rank 0} ne calcule plus la physique : il reçoit les positions et met uniquement à jour le visualiseur ;
+    \item le \texttt{rank 1} conserve tout l'objet \texttt{NBodySystem} et réutilise les noyaux Numba de l'étape 1 pour calculer les pas de temps ;
+\end{itemize}
+
+\subsection{Pourquoi exactement deux processus}
+
+Cette étape ne cherche pas encore à paralléliser le calcul par domaine spatial. Le but est plus simple : séparer proprement les responsabilités. Deux processus suffisent donc :
+\begin{itemize}
+    \item un processus d'affichage ;
+    \item un processus de calcul.
+\end{itemize}
+
+Utiliser plus de processus ici ajouterait de la complexité MPI sans répondre à l'objectif de l'étape.
+
+\subsection{Protocole de communication}
+
+Le protocole MPI retenu est volontairement minimal.
+
+\begin{itemize}
+    \item Au démarrage, le \texttt{rank 1} envoie au \texttt{rank 0} les données nécessaires à l'affichage initial : positions, couleurs, intensités lumineuses et bornes de la scène.
+    \item À chaque pas interactif, le \texttt{rank 0} poste d'abord un \texttt{Irecv} pour le prochain tableau de positions, puis envoie la commande \texttt{STEP}.
+    \item Le \texttt{rank 1} reçoit \texttt{STEP}, calcule le pas suivant, puis envoie les nouvelles positions.
+    \item À la fermeture, le \texttt{rank 0} envoie \texttt{STOP} et attend un accusé de réception.
+\end{itemize}
+
+Le choix \texttt{Irecv} puis \texttt{Send} suit directement le schéma vu en cours : le récepteur se déclare prêt avant l'envoi, ce qui évite les interblocages inutiles.

@@ -1,0 +1,44 @@
+\begin{tikzpicture}
+\begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    xlabel={Nombre de threads},
+    ylabel={Speed-up},
+    xmin=1,
+    xmax=16,
+    ymin=0,
+    xtick={1,2,4,8,16},
+    legend style={at={(0.5,-0.2)}, anchor=north, legend columns=2},
+    grid=both,
+    minor y tick num=1,
+    axis line style={draw=black!60},
+]
+\addplot[
+    color=enstaBleuFonce,
+    mark=*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 1.000)
+        (2, 1.825)
+        (4, 3.281)
+        (8, 4.668)
+        (16, 6.860)
+};
+\addlegendentry{Étape 1 compute-only}
+
+\addplot[
+    color=black!70,
+    mark=triangle*,
+    line width=1.1pt,
+]
+coordinates {
+        (1, 1.000)
+        (2, 1.778)
+        (4, 3.096)
+        (8, 4.688)
+        (16, 5.769)
+};
+\addlegendentry{Étape 2 end-to-end}
+\end{axis}
+\end{tikzpicture}

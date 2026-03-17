@@ -1,0 +1,63 @@
+\section{Mesure initiale : affichage vs calcul}
+
+Avant toute parallélisation, il faut distinguer le coût du rendu graphique du coût du calcul physique. Le visualiseur affiche déjà deux temps :
+\begin{itemize}
+    \item \texttt{Render time}
+    \item \texttt{Update time}
+\end{itemize}
+
+Cette séparation est importante, car seule la partie calcul est directement concernée par l'étape Numba. Si l'affichage reste significatif, la loi d'Amdahl limitera le speed-up global observé dans la simulation interactive.
+
+\subsection{Définition exacte des temps mesurés}
+
+Les deux temps affichés dans la boucle interactive ne correspondent pas à un profilage fin au sens d'un outil dédié ; ils représentent une découpe simple de la boucle principale du visualiseur.
+
+Dans \texttt{stages/01\_numba\_threads/visualizer3d.py}, trois instants sont relevés à chaque itération :
+\begin{itemize}
+    \item \(t_1\) : fin de l'itération précédente ;
+    \item \(t_3\) : juste après l'appel à \texttt{\_render()} ;
+    \item \(t_2\) : juste après \texttt{update\_points(updater(dt))}.
+\end{itemize}
+
+On obtient alors :
+\[
+\texttt{Render time} = t_3 - t_1
+\qquad\text{et}\qquad
+\texttt{Update time} = t_2 - t_3
+\]
+
+Autrement dit :
+\begin{itemize}
+    \item \texttt{Render time} inclut la gestion des événements SDL du début de boucle, le rendu OpenGL du frame courant et l'échange de buffers ;
+    \item \texttt{Update time} inclut l'appel au calcul physique \texttt{updater(dt)} ainsi que la copie des nouvelles positions dans le visualiseur via \texttt{update\_points} ;
+    \item \texttt{Update time} n'inclut ni la gestion d'événements ni le rendu ;
+    \item la première itération est fortement perturbée par l'initialisation et, dans le cas Numba, par la compilation JIT.
+\end{itemize}
+
+En conséquence, ces deux temps donnent une bonne vision macroscopique de la boucle interactive, mais ils ne constituent pas un profilage détaillé instruction par instruction.
+
+\subsection{Mesures observées}
+
+Les premières mesures ont été relevées sur la version de référence \texttt{nbodies\_grid\_numba.py}, avec \texttt{data/galaxy\_1000}, \(dt = 0.0015\) et une grille \(15 \times 15 \times 1\). Après l'itération initiale de compilation JIT, les valeurs stables observées sont d'environ \SI{5}{ms} pour le rendu et \SI{52}{ms} pour la mise à jour physique.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l c}
+        \toprule
+        \textbf{Mesure initiale} & \textbf{Valeur} \\
+        \midrule
+        Temps de rendu & \(\approx\) \SI{5}{ms} \\
+        Temps de mise à jour & \(\approx\) \SI{52}{ms} \\
+        Partie dominante & calcul des trajectoires \\
+        \bottomrule
+    \end{tabular}
+    \caption{Mesure initiale pour comparer affichage et calcul}
+    \label{tab:initial_render_update}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \input{../plots/initial_render_update_plot.tex}
+    \caption{Comparaison des deux temps relevés dans la boucle interactive de référence}
+    \label{fig:initial_render_update}
+\end{figure}

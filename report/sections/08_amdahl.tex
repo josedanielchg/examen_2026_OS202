@@ -1,0 +1,19 @@
+\section{Discussion de l'étape 1 avec la loi d'Amdahl}
+
+Il faut distinguer deux situations :
+\begin{itemize}
+    \item si le benchmark \textit{compute-only} accélère bien, alors la parallélisation Numba du calcul est utile ;
+    \item si la version interactive accélère moins, c'est normal : le rendu et les parties sérielles prennent alors une place plus visible ;
+    \item la comparaison entre 8 et 16 threads permet surtout de voir si ajouter des threads logiques apporte encore un vrai gain.
+\end{itemize}
+
+Les mesures obtenues vont dans ce sens. Le speed-up augmente bien jusqu'à 16 threads, mais l'efficacité baisse progressivement. Le passage de 8 à 16 threads aide encore, mais moins que les premiers paliers. Cela suggère qu'une partie du temps reste limitée par des sections sérielles ou par les accès mémoire.
+
+Un essai interactif sur \texttt{data/galaxy\_1000} montre aussi qu'après parallélisation le temps de mise à jour tombe autour de \SI{4}{ms}, donc du même ordre que le rendu graphique. En pratique, cela veut dire que l'affichage commence à devenir une nouvelle limite.
+
+Le message principal de cette étape est donc simple :
+\begin{itemize}
+    \item Numba améliore clairement le temps de calcul ;
+    \item mais cette amélioration ne peut pas se traduire entièrement dans la version interactive ;
+    \item la suite logique est donc de séparer calcul et affichage dans l'étape suivante.
+\end{itemize}
