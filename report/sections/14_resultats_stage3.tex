@@ -1,0 +1,71 @@
+\section{Résultats de l'étape 3}
+
+\subsection{Campagne de mesures}
+
+La campagne officielle a été menée sur \texttt{data/galaxy\_5000}, avec \(dt = 0.0015\), une grille \(15 \times 15 \times 1\), un pas de warmup et 30 pas mesurés. Les couples \((\text{workers}, \text{threads})\) retenus respectent la contrainte \(\text{workers} \times \text{threads} \leq 16\) sur cette machine.
+
+Pour les cas à 9 processus MPI au total, il a fallu ajouter l'option \texttt{--use-hwthread-cpus} à \texttt{mpirun}, car OpenMPI compte par défaut les slots sur les seuls cœurs physiques.
+
+\subsection{Table 2D des temps bout-en-bout}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c c}
+        \toprule
+        \textbf{Workers MPI} & \textbf{1 thread} & \textbf{2 threads} & \textbf{4 threads} \\
+        \midrule
+        4 & 125.816 & 72.342 & 52.114 \\
+        6 & 163.798 & 100.596 & N/A \\
+        8 & 139.213 & Instable & N/A \\
+        \bottomrule
+    \end{tabular}
+    \caption{Temps bout-en-bout moyens de l'étape 3, en ms}
+    \label{tab:stage3_matrix}
+\end{table}
+
+\subsection{Détails sur les configurations stables}
+
+\begin{table}[H]
+    \centering
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{c c c c c c c c}
+        \toprule
+        \textbf{Workers} & \textbf{Threads} & \textbf{end-to-end (ms)} & \textbf{worker mean (ms)} & \textbf{worker max (ms)} & \textbf{Migration (ms)} & \textbf{Halo (ms)} & \textbf{Réduction (ms)} \\
+        \midrule
+        4 & 1 & 125.816 & 101.738 & 125.148 & 26.652 & 0.493 & 0.255 \\
+        4 & 2 & 72.342 & 58.431 & 71.717 & 12.227 & 0.488 & 0.259 \\
+        4 & 4 & 52.114 & 43.161 & 51.457 & 7.620 & 0.537 & 0.276 \\
+        6 & 1 & 163.798 & 108.963 & 162.997 & 52.802 & 0.596 & 0.325 \\
+        6 & 2 & 100.596 & 68.752 & 99.907 & 32.172 & 0.627 & 0.347 \\
+        8 & 1 & 139.213 & 95.797 & 138.461 & 47.931 & 0.658 & 0.336 \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \caption{Mesures détaillées des configurations stables de l'étape 3}
+    \label{tab:stage3_details}
+\end{table}
+
+\subsection{Graphiques}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage3_speedup_plot.tex}
+        \caption{Speed-up relatif à 4 workers}
+        \label{fig:stage3_speedup}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \input{../plots/stage2_vs_stage3_plot.tex}
+        \caption{Étape 2 vs étape 3 à nombre de threads égal}
+        \label{fig:stage2_vs_stage3}
+    \end{subfigure}
+    \caption{Lecture globale des performances de l'étape 3}
+    \label{fig:stage3_global}
+\end{figure}
+
+Le résultat principal est simple : l'étape 3 devient plus rapide que l'étape 2 à nombre de threads égal dès que l'on utilise 4 workers. Par exemple, à 4 threads, le temps bout-en-bout passe de \SI{79.767}{ms} à l'étape 2 à \SI{52.114}{ms} à l'étape 3.
+
+En revanche, augmenter encore le nombre de workers ne donne pas ici un meilleur speed-up. Les configurations à 6 et 8 workers deviennent moins bonnes que celle à 4 workers, ce qui montre que la décomposition de domaine ne suffit pas à elle seule : le coût de migration et surtout le déséquilibre entre workers prennent alors le dessus.

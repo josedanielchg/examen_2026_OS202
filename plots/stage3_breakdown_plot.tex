@@ -1,0 +1,61 @@
+\begin{tikzpicture}
+\begin{axis}[
+    ybar stacked,
+    width=\linewidth,
+    height=7.0cm,
+    ylabel={Temps (ms)},
+    symbolic x coords={4w-1t,4w-2t,4w-4t,6w-2t,8w-1t},
+    xtick=data,
+    x tick label style={rotate=20, anchor=east},
+    legend style={at={(0.5,-0.22)}, anchor=north, legend columns=2},
+    enlarge x limits=0.15,
+    grid=both,
+    minor y tick num=1,
+    axis line style={draw=black!60},
+]
+\addplot[fill=enstaBleuFonce] coordinates {
+    (4w-1t, 74.338)
+    (4w-2t, 45.457)
+    (4w-4t, 34.728)
+    (6w-2t, 35.606)
+    (8w-1t, 46.872)
+};
+\addlegendentry{Autre calcul}
+
+\addplot[fill=enstaBleuClair] coordinates {
+    (4w-1t, 26.652)
+    (4w-2t, 12.227)
+    (4w-4t, 7.620)
+    (6w-2t, 32.172)
+    (8w-1t, 47.931)
+};
+\addlegendentry{Migration}
+
+\addplot[fill=black!20] coordinates {
+    (4w-1t, 0.493)
+    (4w-2t, 0.488)
+    (4w-4t, 0.537)
+    (6w-2t, 0.627)
+    (8w-1t, 0.658)
+};
+\addlegendentry{Halo}
+
+\addplot[fill=black!40] coordinates {
+    (4w-1t, 0.255)
+    (4w-2t, 0.259)
+    (4w-4t, 0.276)
+    (6w-2t, 0.347)
+    (8w-1t, 0.336)
+};
+\addlegendentry{Réduction}
+
+\addplot[fill=black!65] coordinates {
+    (4w-1t, 23.410)
+    (4w-2t, 13.286)
+    (4w-4t, 8.295)
+    (6w-2t, 31.154)
+    (8w-1t, 42.664)
+};
+\addlegendentry{Déséquilibre}
+\end{axis}
+\end{tikzpicture}

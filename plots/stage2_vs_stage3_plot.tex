@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+\begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    xlabel={Nombre de threads Numba},
+    ylabel={Temps bout-en-bout (ms)},
+    xmin=1,
+    xmax=4,
+    ymin=0,
+    xtick={1,2,4},
+    legend style={at={(0.5,-0.2)}, anchor=north, legend columns=2},
+    grid=both,
+    minor y tick num=1,
+    axis line style={draw=black!60},
+]
+\addplot[color=black!70, mark=square* , line width=1.1pt] coordinates {
+    (1, 246.919)
+    (2, 138.853)
+    (4, 79.767)
+};
+\addlegendentry{Étape 02}
+
+\addplot[color=enstaBleuFonce, mark=* , line width=1.1pt] coordinates {
+    (1, 125.816)
+    (2, 72.342)
+    (4, 52.114)
+};
+\addlegendentry{Étape 03 avec 4 workers}
+\end{axis}
+\end{tikzpicture}
