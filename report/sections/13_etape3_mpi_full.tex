@@ -1,0 +1,26 @@
+\section{Étape 3 : calcul MPI complet avec cellules fantômes}
+
+\subsection{Objectif}
+
+L'objectif de cette étape est de distribuer réellement le calcul sur plusieurs processus MPI. Le \texttt{rank 0} reste dédié à l'affichage, mais les \texttt{ranks 1..P-1} se partagent maintenant la grille de calcul et ne conservent chacun qu'une partie des particules.
+
+\subsection{Changements clés d'implémentation}
+
+\begin{itemize}
+    \item le \texttt{rank 0} lit le fichier initial une seule fois, crée un \texttt{global\_id} fixe pour chaque étoile et distribue les particules aux workers ;
+    \item les workers forment une grille 2D logique sur le plan \(Oxy\), avec une décomposition en blocs rectangulaires de cellules ;
+    \item chaque worker stocke ses particules propriétaires, plus des copies fantômes nécessaires aux interactions directes proches ;
+    \item après chaque pas, les positions sont réunies sur le \texttt{rank 0} par \texttt{global\_id} pour reconstruire l'ordre global avant affichage.
+\end{itemize}
+
+\subsection{Topologie retenue}
+
+Conformément au cours sur la décomposition de domaine, on ne découpe pas l'espace en bandes 1D. Les workers sont organisés en une grille 2D \(p_x \times p_y\) sur \(Ox\) et \(Oy\), tandis que l'axe \(Oz\) reste entier sur chaque worker.
+
+Cette étape n'accepte donc que les exécutions où le nombre de workers se factorise en une vraie grille 2D, avec \(p_x > 1\) et \(p_y > 1\). Le cas à deux processus reste celui de l'étape 2.
+
+\subsection{Rôle des cellules fantômes et des réductions globales}
+
+Le noyau gravitationnel utilise un calcul direct dans les cellules voisines situées à distance de Chebyshev inférieure ou égale à 2. C'est la raison pour laquelle le halo MPI est fixé à deux cellules dans \(x\) et \(y\), diagonales incluses.
+
+Pour les cellules lointaines, chaque worker n'utilise pas les particules une à une, mais la masse totale et le centre de masse globaux de chaque cellule. Ces quantités sont reconstruites par \texttt{Allreduce} en sommant uniquement les particules propriétaires. Les particules fantômes ne servent donc qu'aux interactions proches et ne participent jamais au comptage global.
