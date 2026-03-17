@@ -79,6 +79,7 @@ class Visualizer3D:
         self.vbo_vertices = None
         self.vbo_colors = None
         self.vbo_needs_update = True
+        self.use_vbo = True
         
         # Calcul du centre de la scène (pour centrer la visualisation)
         self.center = np.array([
@@ -130,6 +131,9 @@ class Visualizer3D:
         self.gl_context = sdl2.SDL_GL_CreateContext(self.window)
         if not self.gl_context:
             raise RuntimeError(f"Erreur création contexte GL: {sdl2.SDL_GetError()}")
+
+        # Activation du contexte OpenGL pour le thread courant.
+        sdl2.SDL_GL_MakeCurrent(self.window, self.gl_context)
         
         # Activation de la synchronisation verticale (VSync)
         sdl2.SDL_GL_SetSwapInterval(1)
@@ -226,29 +230,47 @@ class Visualizer3D:
         # Configuration de la caméra
         self._setup_camera()
         
-        # Mise à jour des VBO si nécessaire
-        if self.vbo_needs_update:
-            self._update_vbo()
-        
-        # Dessin des points avec VBO (rendu GPU optimisé)
-        # Activation des vertex arrays
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glEnableClientState(GL_COLOR_ARRAY)
-        
-        # Binding des VBO
-        glBindBuffer(GL_ARRAY_BUFFER, self.vbo_vertices)
-        glVertexPointer(3, GL_FLOAT, 0, None)
-        
-        glBindBuffer(GL_ARRAY_BUFFER, self.vbo_colors)
-        glColorPointer(3, GL_FLOAT, 0, None)
-        
-        # Rendu en une seule opération GPU
-        glDrawArrays(GL_POINTS, 0, len(self.points))
-        
-        # Désactivation des états
-        glDisableClientState(GL_COLOR_ARRAY)
-        glDisableClientState(GL_VERTEX_ARRAY)
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        if self.use_vbo:
+            try:
+                # Mise à jour des VBO si nécessaire
+                if self.vbo_needs_update:
+                    self._update_vbo()
+
+                # Dessin des points avec VBO (rendu GPU optimisé)
+                glEnableClientState(GL_VERTEX_ARRAY)
+                glEnableClientState(GL_COLOR_ARRAY)
+
+                glBindBuffer(GL_ARRAY_BUFFER, self.vbo_vertices)
+                glVertexPointer(3, GL_FLOAT, 0, ctypes.c_void_p(0))
+
+                glBindBuffer(GL_ARRAY_BUFFER, self.vbo_colors)
+                glColorPointer(3, GL_FLOAT, 0, ctypes.c_void_p(0))
+
+                glDrawArrays(GL_POINTS, 0, len(self.points))
+
+                glDisableClientState(GL_COLOR_ARRAY)
+                glDisableClientState(GL_VERTEX_ARRAY)
+                glBindBuffer(GL_ARRAY_BUFFER, 0)
+            except Exception:
+                # Fallback de compatibilité pour les piles SDL/OpenGL
+                self.use_vbo = False
+                glBindBuffer(GL_ARRAY_BUFFER, 0)
+
+        if not self.use_vbo:
+            colors_with_luminosity = (self.colors * self.luminosities[:, np.newaxis] / 255.0).astype(np.float32)
+            glBegin(GL_POINTS)
+            for i in range(len(self.points)):
+                glColor3f(
+                    colors_with_luminosity[i, 0],
+                    colors_with_luminosity[i, 1],
+                    colors_with_luminosity[i, 2],
+                )
+                glVertex3f(
+                    self.points[i, 0],
+                    self.points[i, 1],
+                    self.points[i, 2],
+                )
+            glEnd()
         
         # Échange des buffers (double buffering)
         sdl2.SDL_GL_SwapWindow(self.window)

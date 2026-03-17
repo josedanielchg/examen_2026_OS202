@@ -97,7 +97,9 @@ class Visualizer3D:
         # Initialisation de SDL et OpenGL
         self._init_sdl()
         self._init_opengl()
-        self._init_vbo()
+        # Les VBO posent problème avec certaines piles SDL/OpenGL/PyOpenGL.
+        # On garde un rendu compatible par défaut pour les scripts de simulation.
+        # self._init_vbo()
     
     def _init_sdl(self):
         """
@@ -130,6 +132,9 @@ class Visualizer3D:
         self.gl_context = sdl2.SDL_GL_CreateContext(self.window)
         if not self.gl_context:
             raise RuntimeError(f"Erreur création contexte GL: {sdl2.SDL_GetError()}")
+
+        # Activation du contexte OpenGL pour le thread courant.
+        sdl2.SDL_GL_MakeCurrent(self.window, self.gl_context)
         
         # Activation de la synchronisation verticale (VSync)
         sdl2.SDL_GL_SetSwapInterval(1)
@@ -226,29 +231,21 @@ class Visualizer3D:
         # Configuration de la caméra
         self._setup_camera()
         
-        # Mise à jour des VBO si nécessaire
-        if self.vbo_needs_update:
-            self._update_vbo()
-        
-        # Dessin des points avec VBO (rendu GPU optimisé)
-        # Activation des vertex arrays
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glEnableClientState(GL_COLOR_ARRAY)
-        
-        # Binding des VBO
-        glBindBuffer(GL_ARRAY_BUFFER, self.vbo_vertices)
-        glVertexPointer(3, GL_FLOAT, 0, None)
-        
-        glBindBuffer(GL_ARRAY_BUFFER, self.vbo_colors)
-        glColorPointer(3, GL_FLOAT, 0, None)
-        
-        # Rendu en une seule opération GPU
-        glDrawArrays(GL_POINTS, 0, len(self.points))
-        
-        # Désactivation des états
-        glDisableClientState(GL_COLOR_ARRAY)
-        glDisableClientState(GL_VERTEX_ARRAY)
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        # Dessin des points en mode immédiat pour maximiser la compatibilité.
+        colors_with_luminosity = (self.colors * self.luminosities[:, np.newaxis] / 255.0).astype(np.float32)
+        glBegin(GL_POINTS)
+        for i in range(len(self.points)):
+            glColor3f(
+                colors_with_luminosity[i, 0],
+                colors_with_luminosity[i, 1],
+                colors_with_luminosity[i, 2],
+            )
+            glVertex3f(
+                self.points[i, 0],
+                self.points[i, 1],
+                self.points[i, 2],
+            )
+        glEnd()
         
         # Échange des buffers (double buffering)
         sdl2.SDL_GL_SwapWindow(self.window)
