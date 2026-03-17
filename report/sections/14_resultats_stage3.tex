@@ -23,6 +23,8 @@ Pour les cas à 9 processus MPI au total, il a fallu ajouter l'option \texttt{--
     \label{tab:stage3_matrix}
 \end{table}
 
+Dans cette table, \texttt{N/A} signifie qu'une configuration n'a pas été mesurée parce qu'elle dépasserait la limite \(\text{workers} \times \text{threads} \leq 16\). Le terme \og Instable \fg{} désigne au contraire une configuration réellement testée, mais écartée car elle produit des valeurs non finies au cours du calcul.
+
 \subsection{Détails sur les configurations stables}
 
 \begin{table}[H]
@@ -67,5 +69,7 @@ Pour les cas à 9 processus MPI au total, il a fallu ajouter l'option \texttt{--
 \end{figure}
 
 Le résultat principal est simple : l'étape 3 devient plus rapide que l'étape 2 à nombre de threads égal dès que l'on utilise 4 workers. Par exemple, à 4 threads, le temps bout-en-bout passe de \SI{79.767}{ms} à l'étape 2 à \SI{52.114}{ms} à l'étape 3.
+
+Le gain reste net sur les trois configurations stables à 4 workers : environ \(\times 1.96\) à 1 thread, \(\times 1.92\) à 2 threads et \(\times 1.53\) à 4 threads par rapport à l'étape 2.
 
 En revanche, augmenter encore le nombre de workers ne donne pas ici un meilleur speed-up. Les configurations à 6 et 8 workers deviennent moins bonnes que celle à 4 workers, ce qui montre que la décomposition de domaine ne suffit pas à elle seule : le coût de migration et surtout le déséquilibre entre workers prennent alors le dessus.

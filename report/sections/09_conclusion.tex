@@ -1,12 +1,15 @@
 \section{Conclusion intermédiaire}
 
-Les deux premières étapes installent désormais une base expérimentale cohérente pour la suite du projet :
+Les trois premières étapes installent désormais une base expérimentale cohérente pour la suite du projet :
 \begin{itemize}
     \item une implémentation autonome de l'étape 1 dans \texttt{stages/01\_numba\_threads/}, dédiée au calcul partagé avec Numba ;
     \item une implémentation autonome de l'étape 2 dans \texttt{stages/02\_mpi\_display\_compute/}, dédiée à la séparation MPI entre affichage et calcul ;
-    \item une stratégie de benchmark reproductible distinguant calcul local, coût bout-en-bout et surcoût de communication ;
+    \item une implémentation autonome de l'étape 3 dans \texttt{stages/03\_mpi\_full\_ghost/}, dédiée à la distribution réelle du calcul sur plusieurs workers MPI ;
+    \item une stratégie de benchmark reproductible distinguant calcul local, coût bout-en-bout et principaux surcoûts de communication ;
 \end{itemize}
 
-L'étape 2 montre ensuite qu'il est possible de séparer proprement affichage et calcul avec MPI tout en gardant un surcoût de transfert très faible, de l'ordre de \SI{0.12}{ms} par pas seulement dans la configuration retenue.
+L'étape 2 montre d'abord qu'il est possible de séparer proprement affichage et calcul avec MPI tout en gardant un surcoût de transfert très faible, de l'ordre de \SI{0.12}{ms} par pas seulement dans la configuration retenue.
 
-L'intérêt principal de l'étape 2 est architectural : l'affichage ne vit plus dans le même processus que le calcul, et la communication MPI reste suffisamment légère pour préparer la prochaine étape, où plusieurs processus devront réellement se partager le calcul.
+L'étape 3 valide ensuite la décomposition de domaine 2D avec cellules fantômes. Sur cette machine, la meilleure configuration mesurée est celle à 4 workers : elle devient plus rapide que l'étape 2 à nombre de threads identique, avec par exemple \SI{52.114}{ms} contre \SI{79.767}{ms} à 4 threads.
+
+La limite principale apparaît quand on augmente encore le nombre de workers. Le coût des halos reste faible, mais la migration des particules et surtout le déséquilibre de charge deviennent dominants. Le centre galactique concentre trop de particules pour qu'un découpage régulier reste efficace. La suite logique sera donc d'analyser comment un splitting adaptatif, ou une structure hiérarchique de type Barnes-Hut, pourrait mieux répartir la charge sans faire exploser la complexité des communications.

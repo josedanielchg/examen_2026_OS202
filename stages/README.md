@@ -9,7 +9,7 @@ Ce répertoire conserve une copie livrable de chaque étape importante du projet
 - Les branches `stage/*` servent au développement.
 - Les tags `exam-stage-*` servent à retrouver les jalons validés.
 
-## Étapes prévues
+## Étapes du dépôt
 
 - `00_baseline`: version de référence exécutable.
 - `01_numba_threads`: parallélisation Numba avec threads.
